@@ -21,6 +21,6 @@ spec:
       - name: hrms-frontend
 
         image: 930664225702.dkr.ecr.us-east-1.amazonaws.com/hrms-frontend:latest
-
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
