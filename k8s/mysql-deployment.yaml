@@ -1,5 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: mysql
   namespace: hrms
@@ -18,15 +19,38 @@ spec:
 
     spec:
       containers:
+
       - name: mysql
+
         image: mysql:8
 
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          value: root
-
-        - name: MYSQL_DATABASE
-          value: hrms
+        imagePullPolicy: IfNotPresent
 
         ports:
         - containerPort: 3306
+
+        env:
+
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_ROOT_PASSWORD
+
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_DATABASE
+
+        volumeMounts:
+
+        - name: mysql-storage
+          mountPath: /var/lib/mysql
+
+      volumes:
+
+      - name: mysql-storage
+
+        persistentVolumeClaim:
+          claimName: mysql-pvc

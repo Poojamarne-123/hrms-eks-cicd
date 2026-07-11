@@ -1,5 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: hrms-backend
   namespace: hrms
@@ -22,5 +23,23 @@ spec:
 
         image: 930664225702.dkr.ecr.us-east-1.amazonaws.com/hrms-backend:latest
 
+        imagePullPolicy: Always
+
         ports:
         - containerPort: 8080
+
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:mysql://mysql-service:3306/hrms
+
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: backend-secret
+              key: SPRING_DATASOURCE_USERNAME
+
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: backend-secret
+              key: SPRING_DATASOURCE_PASSWORD
